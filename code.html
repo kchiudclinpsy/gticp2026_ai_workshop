@@ -57,6 +57,21 @@
     }
   </style>
 </head>
+
+  <script>
+async function copyPrompt(button) {
+  const text = document.getElementById("prompt").innerText;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    button.textContent = "Copied!";
+    button.classList.add("copied");
+  } catch (error) {
+    alert("Copying was blocked by the browser. Please select and copy the prompt text manually.");
+  }
+}
+</script>
+  
 <body>
 
   <div class="card">
