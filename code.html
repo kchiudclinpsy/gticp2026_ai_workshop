@@ -57,28 +57,13 @@
     }
   </style>
 </head>
-
-  <script>
-async function copyPrompt(button) {
-  const text = document.getElementById("prompt").innerText;
-
-  try {
-    await navigator.clipboard.writeText(text);
-    button.textContent = "Copied!";
-    button.classList.add("copied");
-  } catch (error) {
-    alert("Copying was blocked by the browser. Please select and copy the prompt text manually.");
-  }
-}
-</script>
-  
 <body>
 
   <div class="card">
     <h1>AI Governance &amp; Ethics Audit Prompt</h1>
     <p class="subtitle">Tap the button below, then paste into your AI tool.</p>
 
-    <button onclick="copyPrompt(this)">Tap to Copy Prompt</button>
+    <button type="button" onclick="copyPrompt(this)">Tap to Copy Prompt</button>
 
     <div class="prompt-text" id="prompt">Act as an independent AI Governance, Ethics, and Implementation Auditor for an educational institution.
 
@@ -107,3 +92,42 @@ Evaluate the solution across all 13 areas below, grouped into three sections:
 
 ### Output Format
 1. Present your findings as a concise, scannable table with columns: **
+</div>
+  </div>
+
+<script>
+async function copyPrompt(button) {
+  const text = document.getElementById("prompt").innerText;
+  let copied = false;
+
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text);
+      copied = true;
+    } catch (error) {
+      // Try the fallback below.
+    }
+  }
+
+  if (!copied) {
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    copied = document.execCommand("copy");
+    document.body.removeChild(textarea);
+  }
+
+  if (copied) {
+    button.textContent = "copied";
+    button.classList.add("copied");
+  } else {
+    alert("Copying failed. Please select and copy the prompt manually.");
+  }
+}
+</script>
+
+</body>
+</html>
